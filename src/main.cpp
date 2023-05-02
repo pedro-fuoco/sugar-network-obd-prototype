@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "BluetoothSerial.h"
 #include "ELMduino.h"
+#include <WiFi.h>
 
 BluetoothSerial SerialBT;
 ELM327 myELM327;
@@ -12,8 +13,20 @@ const char *pin = "1234"; // ELM327 BT password
 
 float FuelLevel;
 
+void initWiFi() {
+  WiFi.mode(WIFI_STA);
+  WiFi.begin("Fuoco", "suxp6897");
+  Serial.print("Connecting to WiFi ..");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print('.');
+    delay(1000);
+  }
+  Serial.println(WiFi.localIP());
+}
+
 void setup() {
   Serial.begin(115200);
+  initWiFi();
   SerialBT.begin(masterName, true);
   SerialBT.setPin(pin);
   
